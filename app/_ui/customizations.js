@@ -775,6 +775,7 @@ export const navigationCustomizations = {
   },
   MuiSelect: {
     defaultProps: {
+      /* eslint-disable react/display-name */
       IconComponent: React.forwardRef((props, ref) => (
         <UnfoldMoreRoundedIcon fontSize="small" {...props} ref={ref} />
       )),

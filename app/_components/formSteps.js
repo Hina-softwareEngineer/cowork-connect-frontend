@@ -398,7 +398,7 @@ export const MeetingRooms = ({ data, setData }) => {
           >
             <MuiMenuItem value={0} disabled>Select meeting rooms</MuiMenuItem>
             {
-              [1, 2, 3, 4, 5, 6, 7, 8].map((room) => <MuiMenuItem value={room}>{room}</MuiMenuItem>)
+              [1, 2, 3, 4, 5, 6, 7, 8].map((room) => <MuiMenuItem key={room} value={room}>{room}</MuiMenuItem>)
             }
           </Select>
         </FormControl>
@@ -880,7 +880,7 @@ export const Mentorship = ({ data, setData }) => {
                   >
                     <MuiMenuItem value={0} disabled>Select domain</MuiMenuItem>
                     {
-                      mentorship_fields.map((field) => <MuiMenuItem disabled={mentorshipSet.has(field)} value={field}>{field}</MuiMenuItem>)
+                      mentorship_fields.map((field) => <MuiMenuItem key={field} disabled={mentorshipSet.has(field)} value={field}>{field}</MuiMenuItem>)
                     }
                   </Select>
                 </Grid>

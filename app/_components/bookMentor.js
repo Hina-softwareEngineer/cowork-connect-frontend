@@ -33,7 +33,7 @@ export function BookMentorForm({ open, handleClose }) {
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
       >
-        <DialogContentText>Please fill out the following form for  booking a mentor. We'll review it and get back to you further details.
+        <DialogContentText>Please fill out the following form for  booking a mentor. We&apos;ll review it and get back to you further details.
         </DialogContentText>
         <OutlinedInput
           autoFocus

@@ -45,7 +45,7 @@ export default function AddListing() {
           {
             (myWorkspaces.length === 0 && !loading) &&
             <Typography variant="h4" sx={{ padding: 2 }}>
-              You haven't added any workspace yet.
+              You haven&apos;t added any workspace yet.
             </Typography>
           }
           {
