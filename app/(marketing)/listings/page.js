@@ -104,19 +104,21 @@ const SearchWorkspace = () => {
           loading && <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}><CircularProgress /></Box>
         }
 
+        {
+          (filteredWorkspaces.length === 0 && !loading) && <Typography variant="body1" sx={{ padding: 2 }}>
+            No workspaces found.
+          </Typography>
+        }
+
         {/* Workspace Cards */}
         <Grid container spacing={3}>
-          {(filteredWorkspaces.length > 0 && !loading) ? (
+          {
             filteredWorkspaces.map((workspace) => (
               <Grid item size={3} key={workspace.id}>
                 <WorkspaceCard workspace={workspace} />
               </Grid>
             ))
-          ) : (
-            <Typography variant="body1" sx={{ padding: 2 }}>
-              No workspaces found.
-            </Typography>
-          )}
+          }
         </Grid>
       </Box>
     </Box >
