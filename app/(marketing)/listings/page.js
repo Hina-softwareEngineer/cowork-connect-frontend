@@ -45,7 +45,7 @@ const SearchWorkspace = () => {
           setLoading(false);
         }
       })
-      .catch(err => console.log(err, err.response))
+      .catch(err => { console.log(err, err.response); setLoading(false); })
   }, [searchCountry, searchCity, searchArea]);
 
   const countries = Array.from(new Set(locations.map(loc => loc[0])));
