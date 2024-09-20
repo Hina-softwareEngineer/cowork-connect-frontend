@@ -15,6 +15,8 @@ import {
   MoreVertRoundedIcon,
   LogoutRoundedIcon
 } from '@/app/_ui/mui';
+import { removeToken } from '../_ui/utils';
+import { useRouter } from 'next/navigation';
 
 
 const MenuItem = styled(MuiMenuItem)({
@@ -22,6 +24,7 @@ const MenuItem = styled(MuiMenuItem)({
 });
 
 export default function OptionsMenu() {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -59,14 +62,13 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={() => { router.push("/dashboard/add-listing"); handleClose(); }}>Profile</MenuItem>
+        <MenuItem onClick={() => { router.push("/dashboard/add-listing"); handleClose(); }}>My account</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Add another account</MenuItem>
         <MenuItem onClick={handleClose}>Settings</MenuItem>
         <Divider />
         <MenuItem
-          onClick={handleClose}
+          onClick={() => { removeToken(); router.push("/listings"); handleClose(); }}
           sx={{
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',

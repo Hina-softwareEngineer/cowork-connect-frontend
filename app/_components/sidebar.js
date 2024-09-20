@@ -7,6 +7,7 @@ import {
 } from '@/app/_ui/mui';
 import MenuContent from './menuContent';
 import OptionsMenu from './optionsMenu';
+import { getUser } from '../_ui/utils';
 
 const drawerWidth = 240;
 
@@ -22,6 +23,7 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const user = getUser();
   return (
     <Drawer
       variant="permanent"
@@ -47,16 +49,16 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
+          alt={user.first_name}
           src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
         />
-        <Box sx={{ mr: 'auto' }}>
+        <Box sx={{ mr: 'auto' }} width='125px'>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+            {user.first_name} {user.last_name}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+          <Typography variant="caption" sx={{ color: 'text.secondary', }}>
+            {user.email}
           </Typography>
         </Box>
         <OptionsMenu />

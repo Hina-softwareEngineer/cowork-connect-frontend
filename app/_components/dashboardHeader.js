@@ -7,8 +7,18 @@ import {
 } from '@/app/_ui/mui';
 import HeaderBreadcrumbs from './breadCrumb';
 import Search from './search';
+import { usePathname } from 'next/navigation';
+
+
+const mainListItems = {
+  '/dashboard/add-listing': ['Dashboard', 'Add Listing'],
+  '/dashboard/view-listing': ['Dashboard', 'View Listing'],
+};
+
 
 export default function Header() {
+  const pathname = usePathname();
+  const breadcrumb = mainListItems[pathname];
   return (
     <Stack
       direction="row"
@@ -22,7 +32,7 @@ export default function Header() {
       }}
       spacing={2}
     >
-      <HeaderBreadcrumbs />
+      <HeaderBreadcrumbs breadcrumbs={breadcrumb} />
       <Stack direction="row" sx={{ gap: 1 }}>
         <Search />
       </Stack>

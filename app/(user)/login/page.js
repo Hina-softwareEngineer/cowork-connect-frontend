@@ -7,6 +7,9 @@ import {
 } from '@/app/_ui/mui';
 
 import { GoogleIcon, FacebookIcon } from '@/app/(user)/customIcons';
+import axios from 'axios';
+import { baseUrl, setToken } from '@/app/_ui/utils';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
 
@@ -14,14 +17,19 @@ export default function Login() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
+    let data = new FormData(event.currentTarget);
+    data = {
       email: data.get('email'),
-      password: data.get('password'),
-    });
+      password: data.get('password')
+    }
+    axios.post(`${baseUrl}space/login/`, data).then(res => {
+      setToken(res.data);
+      router.push('/dashboard/add-listing');
+    }).catch(err => console.log(err, err?.response));
   };
 
   const validateInputs = () => {
@@ -38,16 +46,6 @@ export default function Login() {
       setEmailError(false);
       setEmailErrorMessage('');
     }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
     return isValid;
   };
 

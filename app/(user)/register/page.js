@@ -7,6 +7,9 @@ import {
 } from '@/app/_ui/mui';
 
 import { GoogleIcon, FacebookIcon } from '@/app/(user)/customIcons';
+import axios from 'axios';
+import { baseUrl, setToken } from '@/app/_ui/utils';
+import { useRouter } from 'next/navigation';
 
 
 export default function Register() {
@@ -19,18 +22,25 @@ export default function Register() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(event.currentTarget);
-    const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get('first_name'),
-      lastName: data.get('last_name') || '',
-      organisation: data.get('organisation_name'),
+    let data = new FormData(event.currentTarget);
+    data = {
+      first_name: data.get('first_name'),
+      last_name: data.get('last_name') || '',
+      organization: data.get('organisation_name'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    axios.post(`${baseUrl}space/register/`, data).then(res => {
+      setToken(res.data);
+      router.push('/dashboard/add-listing');
+    }).catch(err => console.log(err, err?.response));
+
   };
 
   const validateInputs = () => {

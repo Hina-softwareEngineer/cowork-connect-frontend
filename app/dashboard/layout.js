@@ -5,7 +5,7 @@ import { coworkTheme } from '@/app/_ui/theme';
 import { DashboardStyle } from './styles';
 import {
   Box, Stack, IconButton, AppBar, Toolbar, Typography,
-  ArrowBackRoundedIcon
+  ArrowBackRoundedIcon,
 } from '@/app/_ui/mui';
 import { Logo } from '@/app/_images';
 import SideMenu from '../_components/sidebar';
@@ -28,16 +28,19 @@ export default function DashboardLayout({ children }) {
                 p: '8px 12px',
               }}
             >
-              <IconButton
-                title='Home'
-                color="primary"
-                size="small"
-                aria-label="Back"
-                component="a"
-                href="/"
-              >
-                <ArrowBackRoundedIcon />
-              </IconButton>
+              <Box display='flex' alignItems='center'>
+                <IconButton
+                  title='Home'
+                  color="primary"
+                  size="small"
+                  aria-label="Back"
+                  component="a"
+                  href="/"
+                >
+                  <ArrowBackRoundedIcon />
+                </IconButton>
+                <Box sx={{ ml: 2, transform: 'scale(1.5) translateX(10px) translateY(3px)' }}><Logo width={50} height={35} /></Box>
+              </Box>
             </Toolbar>
           </AppBar>
 
@@ -56,9 +59,7 @@ export default function DashboardLayout({ children }) {
                 >
                   <DashboardHeader />
                   <Box sx={{ width: '100%' }}>
-                    <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-                      Overview
-                    </Typography>
+
                     {children}
                   </Box>
                 </Stack>

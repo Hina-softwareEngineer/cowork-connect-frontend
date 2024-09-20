@@ -20,16 +20,20 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   },
 }));
 
-export default function NavbarBreadcrumbs() {
+export default function NavbarBreadcrumbs({ breadcrumbs }) {
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
-      <Typography variant="body1">Dashboard</Typography>
-      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-        Home
-      </Typography>
-    </StyledBreadcrumbs>
+      {
+        breadcrumbs.map((bc, ind) => <Typography
+          key={ind}
+          variant="body1"
+          sx={ind + 1 === breadcrumbs.length ? { color: 'text.primary', fontWeight: 600 } : {}}
+        >{bc}</Typography>)
+      }
+
+    </StyledBreadcrumbs >
   );
 }

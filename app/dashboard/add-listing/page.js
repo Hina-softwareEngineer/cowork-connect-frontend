@@ -26,9 +26,16 @@ import {
   Mentorship
 } from '@/app/_components/formSteps';
 import { initialFormData } from '../constants';
+import { convertJsToPython, convertToFormData } from '../utils';
+import axios from 'axios';
+import { baseUrl, getToken } from '@/app/_ui/utils';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+
 
 
 export default function AddListing() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState({ ...initialFormData });
 
@@ -44,9 +51,41 @@ export default function AddListing() {
     setCurrentStep(id);
   }
 
+  const getCleanData = (data) => {
+    let convertedData = convertJsToPython(data);
+    convertedData['meeting_rooms'] = [...convertedData.meetingRooms.room_data];
+    convertedData['price_desks'] = Object.entries(convertedData.price_desks).map(([key, value]) => (value.map(v => ({ ...v, type: key }))));
+    convertedData['price_desks'] = convertedData['price_desks'][0].concat(convertedData['price_desks'][1]);
+
+    delete convertedData['meetingRooms'];
+
+    return convertedData;
+  }
+
   const handleSubmit = () => {
-    // setCurrentStep(0);
-    console.log("----form data----", formData);
+    let updatedFormData = {
+      ...formData,
+      description: { ...formData.description },
+      operationalTimings: { ...formData.operationalTimings }
+    };
+    updatedFormData.description.openingDate = dayjs(updatedFormData.description.openingDate).format('YYYY-MM-DD');
+    updatedFormData.operationalTimings.openingTime = dayjs(updatedFormData.operationalTimings.openingTime).format('HH:mm');
+    updatedFormData.operationalTimings.closingTime = dayjs(updatedFormData.operationalTimings.closingTimeopeningTime).format('HH:mm');
+
+    let finalData = getCleanData(updatedFormData);
+
+    let formImageData = new FormData();
+    formImageData.append('data', JSON.stringify(finalData));
+    formImageData.append('image', formData.description.image);
+
+    axios.post(`${baseUrl}space/add-workspaces/`, formImageData, getToken())
+      .then(res => {
+        if (res.status == 201) {
+          setFormData({ ...formData });
+          router.push('/listings');
+        }
+      })
+      .catch(err => console.log(err, err.response))
   }
 
   const steps = [
@@ -64,35 +103,40 @@ export default function AddListing() {
   ];
 
   return (
-    <Box sx={{ width: '100%', px: 8 }}>
-      <Stack direction='row' spacing={10}>
+    <>
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+        Add Workspace
+      </Typography>
+      <Box sx={{ width: '100%', px: 8 }}>
+        <Stack direction='row' spacing={10}>
 
-        <Box py={2}>
-          <Stepper activeStep={currentStep} orientation='vertical' connector={<QontoConnector />}>
-            {steps.map((step, index) => (
-              <StepStyled key={step.label}>
-                <StepButton onClick={() => goToStep(index)}>{step.label}</StepButton>
-              </StepStyled>
-            ))}
-          </Stepper>
-        </Box>
-
-        <Box flex="1" display='flex' flexDirection='column'>
-          <Typography
-            component="h2" variant="h6" fontSize={24}>{steps[currentStep].label}</Typography>
-          <Divider sx={{ mt: 1, mb: 2 }} />
-          <Box flex="1">
-            {steps[currentStep].component}
+          <Box py={2}>
+            <Stepper activeStep={currentStep} orientation='vertical' connector={<QontoConnector />}>
+              {steps.map((step, index) => (
+                <StepStyled key={step.label}>
+                  <StepButton onClick={() => goToStep(index)}>{step.label}</StepButton>
+                </StepStyled>
+              ))}
+            </Stepper>
           </Box>
-          <Divider sx={{ my: 3 }} />
-          <Stack direction='row' justifyContent="space-between">
-            <Button variant='outlined' disabled={currentStep === 0} startIcon={<KeyboardArrowLeftRoundedIcon />} onClick={handlePrevious}>Previous</Button>
-            <Button variant='outlined' disabled={currentStep === steps.length - 1} endIcon={<KeyboardArrowRightRoundedIcon />} onClick={handleNext}>Next</Button>
-          </Stack>
-        </Box>
 
-      </Stack>
+          <Box flex="1" display='flex' flexDirection='column'>
+            <Typography
+              component="h2" variant="h6" fontSize={24}>{steps[currentStep].label}</Typography>
+            <Divider sx={{ mt: 1, mb: 2 }} />
+            <Box flex="1">
+              {steps[currentStep].component}
+            </Box>
+            <Divider sx={{ my: 3 }} />
+            <Stack direction='row' justifyContent="space-between">
+              <Button variant='outlined' disabled={currentStep === 0} startIcon={<KeyboardArrowLeftRoundedIcon />} onClick={handlePrevious}>Previous</Button>
+              <Button variant='outlined' disabled={currentStep === steps.length - 1} endIcon={<KeyboardArrowRightRoundedIcon />} onClick={handleNext}>Next</Button>
+            </Stack>
+          </Box>
 
-    </Box >
+        </Stack>
+
+      </Box >
+    </>
   );
 }
