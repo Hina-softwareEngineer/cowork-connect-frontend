@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Grid, Card, CardContent, CardMedia, Typography, Box, Divider, } from '@/app/_ui/mui';
+import { Grid, Card, CardContent, CardMedia, Typography, Divider, } from '@/app/_ui/mui';
 import { coworkTheme } from '@/app/_ui/theme';
 import { useRouter } from 'next/navigation';
 
@@ -11,8 +11,8 @@ export const WorkspaceCard = ({ workspace }) => {
   let fallbackImage = "https://hubble.imgix.net/listings/uploads/spaces/4592/1714482568937-offic20000.jpg?auto=format%2Ccompress&ar=4%3A3&fit=crop&q=30&w=3840" // Replace with your image UR
   let deskPrice = workspace.price_desks.filter(pd => pd.duration === 'day');
   let deskDuration = 'day'
-  if (deskPrice.length === 0) { deskPrice = workspace.price_desks[0].price; deskDuration = workspace.price_desks[0].duration; }
-  else { deskPrice = deskPrice[0].price; }
+  if (deskPrice.length === 0) { deskPrice = workspace.price_desks[0]?.price; deskDuration = workspace.price_desks[0]?.duration; }
+  else { deskPrice = deskPrice[0]?.price; }
 
 
   return (
