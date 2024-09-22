@@ -26,6 +26,7 @@ import axios from 'axios';
 import { baseUrl } from '@/app/_ui/utils';
 import { amenities } from '@/app/dashboard/constants';
 import { BookTourForm } from '@/app/_components/bookTour';
+import { ContactEnquireForm } from '@/app/_components/contactEnquire';
 
 
 let fallbackImage = "https://hubble.imgix.net/listings/uploads/spaces/4592/1714482568937-offic20000.jpg?auto=format%2Ccompress&ar=4%3A3" // Replace with your image UR
@@ -34,6 +35,7 @@ const ListingDetailPage = ({ params }) => {
   const [workspace, setWorkspace] = useState(null);
   const [openMentorBookingForm, setOpenMentorBookingForm] = useState(false);
   const [openTourBookingForm, setOpenTourBookingForm] = useState(false);
+  const [contactForm, setContactForm] = useState(false);
   const [booking, setBooking] = useState({
     team_size: '',
     type: '',
@@ -109,6 +111,8 @@ const ListingDetailPage = ({ params }) => {
               component="h5"
               variant="h5" fontSize={16}>Address</Typography>
             <Typography mt={1}>{workspace.location.address_line1}</Typography>
+            <Typography mt={1}>Contact: {workspace.description.phone}</Typography>
+            <Typography mt={1}>Visit at: <a href={workspace.description.website_url} target='_blank' style={{ textDecoration: 'underline' }}>@{workspace.description.name}</a></Typography>
 
             <Typography
               mt={4}
@@ -137,150 +141,157 @@ const ListingDetailPage = ({ params }) => {
             </Grid>
 
 
-            <Typography
-              mt={8}
-              component="h5"
-              variant="h5" fontSize={16}>Meeting Rooms</Typography>
-            <TableContainerStyled sx={{ mb: 2, mt: 1 }} component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Meeting Rooms</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Capacity</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-
-                  {
-                    workspace.meeting_rooms.map((mr) => (
-                      <TableRow
-                        key={mr.id + Math.random()}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {mr.name}
-                        </TableCell>
-                        <TableCell align="right">{mr.capacity}</TableCell>
-                        <TableCell align="right">{mr.price}</TableCell>
-
+            {
+              workspace.meeting_rooms.length > 0 && (<><Typography
+                mt={8}
+                component="h5"
+                variant="h5" fontSize={16}>Meeting Rooms</Typography>
+                <TableContainerStyled sx={{ mb: 2, mt: 1 }} component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Meeting Rooms</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Capacity</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
                       </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        workspace.meeting_rooms.map((mr) => (
+                          <TableRow
+                            key={mr.id + Math.random()}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {mr.name}
+                            </TableCell>
+                            <TableCell align="right">{mr.capacity}</TableCell>
+                            <TableCell align="right">{parseInt(mr.price) === 0 ? 'Contact to Enquire' : mr.price}</TableCell>
+
+                          </TableRow>
+                        ))
+                      }
+
+                    </TableBody>
+                  </Table>
+                </TableContainerStyled></>)
+            }
+
+
+            {
+              workspace.price_desks.length > 0 && (<><Typography
+                mt={8}
+                component="h5"
+                variant="h5" fontSize={16}>Coworking Space</Typography>
+                <Grid container spacing={2} mt={2} mb={2}>
+                  {workspace.price_desks.map((pd) => <Grid key={pd.id + Math.random()} size={3}>
+                    <Paper sx={{ boxShadow: coworkTheme.shadows[3], p: 4, textAlign: 'center' }}>
+                      <Typography component="h5" variant="h6" sx={{ textTransform: 'capitalize' }} fontSize={16}>{pd.duration}</Typography>
+                      <Typography component="h2" variant="h6" fontSize={parseInt(pd.price) === 0 ? 17 : 25}>{parseInt(pd.price) === 0 ? 'Contact to Enquire' : `$${pd.price}`}</Typography>
+                      <Typography component="h6" fontSize={12}>price / person</Typography>
+                      <Typography component="h6" fontSize={12}>{pd.type === 'hot_desks' ? 'Hot Desks' : 'Dedicated Desks'}</Typography>
+                    </Paper>
+                  </Grid>)}
+                </Grid></>)
+            }
+
+
+            {
+              workspace.price_private_offices.length > 0 && (<> <Typography
+                mt={8}
+                component="h5"
+                variant="h5" fontSize={16}>Private Offices</Typography>
+                <TableContainerStyled sx={{ my: 1 }} component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Room Type</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Capacity</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Offices</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        workspace.price_private_offices.map((ppo, ind) => (
+                          <TableRow
+                            key={ppo.id + Math.random()}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              Room {ind + 1}
+                            </TableCell>
+                            <TableCell align="right">{ppo.desks}</TableCell>
+                            <TableCell align="right">{parseInt(ppo.price) === 0 ? 'Contact to Enquire' : `$${ppo.price}`}</TableCell>
+                            <TableCell align="right">{ppo.similar}</TableCell>
+                          </TableRow>
+                        ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainerStyled></>)
+            }
+
+
+
+            {
+              workspace.price_floors.length > 0 && (<><Typography
+                mt={8}
+                component="h5"
+                variant="h5" fontSize={16}>Floors</Typography>
+                <TableContainerStyled sx={{ my: 1 }} component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Floor Type</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Exec Rooms</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Meeting Rooms</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Desks</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Floors</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        workspace.price_floors.map((floor, ind) => (
+                          <TableRow
+                            key={floor.id + Math.random()}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              Floor  {ind + 1}
+                            </TableCell>
+                            <TableCell align="right">{floor.exec_rooms}</TableCell>
+                            <TableCell align="right">{floor.meeting_rooms}</TableCell>
+                            <TableCell align="right">{floor.desks}</TableCell>
+                            <TableCell align="right">{parseInt(floor.price) === 0 ? 'Contact to Enquire' : `$${floor.price}`}</TableCell>
+                            <TableCell align="right">{floor.similar}</TableCell>
+                          </TableRow>
+                        ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainerStyled></>)
+            }
+
+
+
+            {
+              workspace.mentorship.length > 0 && (<><Typography
+                mt={8}
+                component="h5"
+                variant="h5" fontSize={16}>Available Domain Expertise</Typography>
+                <Grid container spacing={2} mt={2}>
+                  {
+                    workspace.mentorship.map(mentor => (
+                      <Grid key={mentor.domain} size={4}><Typography>• {mentor.domain}</Typography></Grid>
                     ))
                   }
-
-                </TableBody>
-              </Table>
-            </TableContainerStyled>
-
-
-
-
-            <Typography
-              mt={8}
-              component="h5"
-              variant="h5" fontSize={16}>Coworking Space</Typography>
-            <Grid container spacing={2} mt={2} mb={2}>
-              {workspace.price_desks.map((pd) => <Grid key={pd.id + Math.random()} size={3}>
-                <Paper sx={{ boxShadow: coworkTheme.shadows[3], p: 4, textAlign: 'center' }}>
-                  <Typography component="h5" variant="h6" sx={{ textTransform: 'capitalize' }} fontSize={16}>{pd.duration}</Typography>
-                  <Typography component="h2" variant="h6" fontSize={25}><span>$</span>{pd.price}</Typography>
-                  <Typography component="h6" fontSize={12}>price / person</Typography>
-                  <Typography component="h6" fontSize={12}>{pd.type === 'hot_desks' ? 'Hot Desks' : 'Dedicated Desks'}</Typography>
-                </Paper>
-              </Grid>)}
-            </Grid>
-
-
-
-            <Typography
-              mt={8}
-              component="h5"
-              variant="h5" fontSize={16}>Private Offices</Typography>
-            <TableContainerStyled sx={{ my: 1 }} component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Room Type</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Capacity</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Offices</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    workspace.price_private_offices.map((ppo, ind) => (
-                      <TableRow
-                        key={ppo.id + Math.random()}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          Room {ind + 1}
-                        </TableCell>
-                        <TableCell align="right">{ppo.desks}</TableCell>
-                        <TableCell align="right">${ppo.price}</TableCell>
-                        <TableCell align="right">{ppo.similar}</TableCell>
-                      </TableRow>
-                    ))
-                  }
-                </TableBody>
-              </Table>
-            </TableContainerStyled>
-
-
-
-            <Typography
-              mt={8}
-              component="h5"
-              variant="h5" fontSize={16}>Floors</Typography>
-            <TableContainerStyled sx={{ my: 1 }} component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }}>Floor Type</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Exec Rooms</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Meeting Rooms</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Desks</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Price/month</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', borderBottom: `1px solid ${coworkTheme.palette.secondary.main}` }} align="right">Total Floors</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    workspace.price_floors.map((floor, ind) => (
-                      <TableRow
-                        key={floor.id + Math.random()}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          Floor  {ind + 1}
-                        </TableCell>
-                        <TableCell align="right">{floor.exec_rooms}</TableCell>
-                        <TableCell align="right">{floor.meeting_rooms}</TableCell>
-                        <TableCell align="right">{floor.desks}</TableCell>
-                        <TableCell align="right">${floor.price}</TableCell>
-                        <TableCell align="right">{floor.similar}</TableCell>
-                      </TableRow>
-                    ))
-                  }
-                </TableBody>
-              </Table>
-            </TableContainerStyled>
-
-
-            <Typography
-              mt={8}
-              component="h5"
-              variant="h5" fontSize={16}>Available Domain Expertise</Typography>
-            <Grid container spacing={2} mt={2}>
-              {
-                workspace.mentorship.map(mentor => (
-                  <Grid key={mentor.domain} size={4}><Typography>• {mentor.domain}</Typography></Grid>
-                ))
-              }
-            </Grid>
-            <BookMentorForm open={openMentorBookingForm} handleClose={() => setOpenMentorBookingForm(false)} />
-            <Button sx={{ mt: 2 }} variant='contained' color='secondary' onClick={() => setOpenMentorBookingForm(true)}>Book a Mentor</Button>
-
+                </Grid>
+                <BookMentorForm open={openMentorBookingForm} handleClose={() => setOpenMentorBookingForm(false)} />
+                <Button sx={{ mt: 2 }} variant='contained' color='secondary' onClick={() => setOpenMentorBookingForm(true)}>Book a Mentor</Button>
+              </>)
+            }
 
           </Box>
         </Grid>
@@ -341,11 +352,15 @@ const ListingDetailPage = ({ params }) => {
                   <Button sx={{ mt: 1 }} variant='contained' color='secondary' onClick={() => { console.log({ booking }); setOpenTourBookingForm(true); }}>Book a Tour</Button>
                 </Box>
                 <BookTourForm open={openTourBookingForm} handleClose={() => setOpenTourBookingForm(false)} />
+
+                <Typography mt={10} mb={2}>Interested in Pricing Details?</Typography>
+                <Button variant='outlined' color='secondary' onClick={() => setContactForm(true)}>Contact Here</Button>
               </Paper>
             </Box>
           </Box>
         </Grid>
 
+        <ContactEnquireForm open={contactForm} handleClose={() => setContactForm(false)} />
       </Grid>
     </Box >
   );

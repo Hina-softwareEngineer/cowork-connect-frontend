@@ -3,6 +3,8 @@
 import { coworkTheme as theme } from '@/app/_ui/theme';
 import { styled } from '@mui/material/styles';
 import {
+  Typography,
+  TextField,
   Button,
   Dialog,
   DialogActions,
@@ -13,7 +15,7 @@ import {
 } from '@/app/_ui/mui';
 
 
-export function BookMentorForm({ open, handleClose }) {
+export function ContactEnquireForm({ open, handleClose }) {
   return (
     <Dialog
       open={open}
@@ -26,11 +28,11 @@ export function BookMentorForm({ open, handleClose }) {
         },
       }}
     >
-      <DialogTitle>Book a Mentor</DialogTitle>
+      <DialogTitle>Please fill out the form below so we can provide you with the best options and pricing for your office or floor booking needs.</DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
       >
-        <DialogContentText>Please fill out the following form for  booking a mentor. We&apos;ll review it and get back to you further details.
+        <DialogContentText>
         </DialogContentText>
         <OutlinedInput
           autoFocus
@@ -38,7 +40,7 @@ export function BookMentorForm({ open, handleClose }) {
           margin="dense"
           id="domain"
           name="domain"
-          placeholder="Mentorship Domains"
+          placeholder="Full Name"
           type="text"
           fullWidth
         />
@@ -48,8 +50,8 @@ export function BookMentorForm({ open, handleClose }) {
           margin="dense"
           id="mentors"
           name="mentors"
-          placeholder="Total Mentors"
-          type="text"
+          placeholder="Email"
+          type="email"
           fullWidth
         />
         <OutlinedInput
@@ -58,8 +60,8 @@ export function BookMentorForm({ open, handleClose }) {
           margin="dense"
           id="hours"
           name="hours"
-          placeholder="Duration (in hours)"
-          type="number"
+          placeholder="Phone"
+          type="tel"
           fullWidth
         />
       </DialogContent>

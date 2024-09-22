@@ -40,54 +40,70 @@ export const WorkspaceCard = ({ workspace }) => {
           {workspace.location.city || workspace.location.area}
         </Typography>
         <Divider sx={{ mt: 2, mb: 1 }} />
-        <Grid container spacing={2} justifyContent='space-between' mt={2}>
-          <Grid item xs={6} >
-            <Typography variant="body2" color="text.primary" fontSize='15px'>
-              Coworking Space
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.primary" fontWeight='bold' fontSize='15px'>
-              ${deskPrice} / {deskDuration}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} justifyContent='space-between' mt={2}>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.primary" fontSize='15px'>
-              Private Day Office
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
-              ${workspace.price_private_offices[0].price} / month
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} justifyContent='space-between' mt={2}>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.primary" fontSize='15px'>
-              Floors
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
-              ${workspace.price_floors[0].price} / month
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} justifyContent='space-between' mt={2}>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.primary" fontSize='15px'>
-              Meeting Rooms
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
-              Available to book
-            </Typography>
-          </Grid>
-        </Grid>
+        {
+          deskPrice && (<Grid container spacing={2} justifyContent='space-between' mt={2}>
+            <Grid item xs={6} >
+              <Typography variant="body2" color="text.primary" fontSize='15px'>
+                Coworking Space
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.primary" fontWeight='bold' fontSize='15px'>
+                {parseInt(deskPrice) === 0 ? 'Contact to Enquire' : `$${deskPrice} / ${deskDuration}`}
+              </Typography>
+            </Grid>
+          </Grid>)
+        }
+        {
+          workspace.price_private_offices.length > 0 && (
+            <Grid container spacing={2} justifyContent='space-between' mt={2}>
+              <Grid item xs={6}>
+                <Typography variant="body2" color="text.primary" fontSize='15px'>
+                  Private Day Office
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
+                  {parseInt(workspace.price_private_offices[0].price) === 0 ? 'Contact to Enquire' : `$${workspace.price_private_offices[0].price} / month`}
+                </Typography>
+              </Grid>
+            </Grid>
+          )
+        }
+        {
+          workspace.price_floors.length > 0 && (
+            <Grid container spacing={2} justifyContent='space-between' mt={2}>
+              <Grid item xs={6}>
+                <Typography variant="body2" color="text.primary" fontSize='15px'>
+                  Floors
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
+                  {parseInt(workspace.price_floors[0].price) === 0 ? 'Contact to Enquire' : `$${workspace.price_floors[0].price} / month`}
+                </Typography>
+              </Grid>
+            </Grid>
+          )
+        }
+        {
+          workspace.meeting_rooms.length > 0 && (
+            <Grid container spacing={2} justifyContent='space-between' mt={2}>
+              <Grid item xs={6}>
+                <Typography variant="body2" color="text.primary" fontSize='15px'>
+                  Meeting Rooms
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" color="text.primary" fontWeight='bold' fontSize='15px'>
+                  Available to book
+                </Typography>
+              </Grid>
+            </Grid>
+          )
+        }
+
+
 
       </CardContent>
     </Card>

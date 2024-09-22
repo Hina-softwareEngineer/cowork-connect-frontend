@@ -59,6 +59,32 @@ export default function AddListing() {
 
     delete convertedData['meetingRooms'];
 
+    // desks
+    let desks = convertedData['price_desks'];
+    if (desks) {
+      let updatedDesks = desks.filter(d => (d.available && d.price !== ''));
+      convertedData['price_desks'] = updatedDesks;
+    }
+
+    // privateOffice
+    let privateOffices = convertedData['price_private_offices'];
+    if (privateOffices.length == 1 && privateOffices[0].desks === '' && privateOffices[0].price === '') {
+      convertedData['price_private_offices'] = [];
+    }
+
+    // priceFloorss
+    let priceFloors = convertedData['price_floors'];
+    if (priceFloors.length == 1 && priceFloors[0].exec_rooms === '' && priceFloors[0].desks === '' && priceFloors[0].price === '') {
+      convertedData['price_floors'] = [];
+    }
+
+    // mentorship
+    let mentorship = convertedData['mentorship'];
+    if (mentorship.length == 1 && mentorship[0].domain === 0 && mentorship[0].mentors === '') {
+      convertedData['mentorship'] = [];
+    }
+
+
     return convertedData;
   }
 
@@ -73,6 +99,7 @@ export default function AddListing() {
     updatedFormData.operationalTimings.closingTime = dayjs(updatedFormData.operationalTimings.closingTimeopeningTime).format('HH:mm');
 
     let finalData = getCleanData(updatedFormData);
+    console.log('final->', finalData);
 
     let formImageData = new FormData();
     formImageData.append('data', JSON.stringify(finalData));

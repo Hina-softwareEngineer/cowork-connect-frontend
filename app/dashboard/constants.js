@@ -10,7 +10,7 @@ export const privateOffices = {
   desks: '',
   price: '',
   duration: 'month',
-  similar: '',
+  similar: 1,
 };
 
 export const floorData = {
@@ -19,7 +19,7 @@ export const floorData = {
   desks: '',
   duration: 'month',
   price: '',
-  similar: ''
+  similar: 1
 };
 
 export const amenities = {
