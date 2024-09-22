@@ -20,8 +20,18 @@ import { selectClasses } from '@mui/material/Select';
 import { tabClasses } from '@mui/material/Tab';
 import UnfoldMoreRoundedIcon from '@mui/icons-material/UnfoldMoreRounded';
 
-import { purple } from '@mui/material/colors';
+// import { purple } from '@mui/material/colors';
 
+export const purple = {
+  50: '#f0c7d8',
+  100: '#e49aba',
+  200: '#d86e9b',
+  300: '#B43068',
+  400: '#cc417c',
+  500: '#be336e',
+  600: '#a82d61',
+  700: '#912754',
+}
 
 export const gray = {
   50: 'hsl(220, 35%, 97%)',
@@ -58,8 +68,8 @@ export const brand = {
   500: purple[500],
   600: purple[600],
   700: purple[700],
-  800: purple[800],
-  900: purple[900]
+  800: purple[700],
+  900: purple[700]
 };
 
 export const green = {

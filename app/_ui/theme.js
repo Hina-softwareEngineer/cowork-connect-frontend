@@ -1,8 +1,8 @@
 import { Inter } from 'next/font/google';
-import { purple } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 import { createTheme, alpha } from '@mui/material/styles';
 import {
-  gray, brand, green, orange, red,
+  gray, brand, green, orange, red, purple,
   inputsCustomizations,
   dataDisplayCustomizations,
   feedbackCustomizations,
@@ -17,6 +17,7 @@ export const roboto = Inter({
 });
 
 const theme = createTheme();
+
 
 
 export const coworkTheme = createTheme(theme, {

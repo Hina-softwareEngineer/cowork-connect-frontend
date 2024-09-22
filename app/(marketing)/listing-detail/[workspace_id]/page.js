@@ -25,7 +25,7 @@ import { BookMentorForm } from '@/app/_components/bookMentor';
 import axios from 'axios';
 import { baseUrl } from '@/app/_ui/utils';
 import { amenities } from '@/app/dashboard/constants';
-import { BookTourForm } from '@/app/_components/bookTour';
+import { BookNowForm, BookTourForm } from '@/app/_components/bookTour';
 import { ContactEnquireForm } from '@/app/_components/contactEnquire';
 
 
@@ -35,6 +35,7 @@ const ListingDetailPage = ({ params }) => {
   const [workspace, setWorkspace] = useState(null);
   const [openMentorBookingForm, setOpenMentorBookingForm] = useState(false);
   const [openTourBookingForm, setOpenTourBookingForm] = useState(false);
+  const [openBookingNowForm, setOpenBookingNowForm] = useState(false);
   const [contactForm, setContactForm] = useState(false);
   const [booking, setBooking] = useState({
     team_size: '',
@@ -299,62 +300,130 @@ const ListingDetailPage = ({ params }) => {
           <Box >
             <Box >
               <Paper sx={{ boxShadow: coworkTheme.shadows[3], background: coworkTheme.palette.common.white, p: 4, textAlign: 'center' }}>
-                <Box
-                  maxWidth='500px'
-                  component="form"
-                  noValidate
-                  sx={{ display: 'flex', flexDirection: 'column', width: '100%', textAlign: 'left', gap: 2 }}
-                >
-                  <FormControl>
-                    <FormLabel htmlFor="name">How many people is the Office for?</FormLabel>
-                    <TextField
-                      id="name"
-                      type="text"
-                      name="team_size"
-                      placeholder="Team Size"
-                      autoFocus
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ ariaLabel: 'name' }}
-                      value={booking.team_size}
-                      onChange={e => handleChange(e.target.name, e.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="name">What are you looking for?</FormLabel>
-                    <RadioGroup
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={booking.type}
-                      onChange={e => handleChange(e.target.name, e.target.value)}
-                    >
-                      <FormControlLabel name='type' label="Coworking Space" control={<Radio />} value="coworking-space" />
-                      <FormControlLabel name='type' label="Private Office" control={<Radio />} value="private-office" />
-                      <FormControlLabel name='type' label="Floor" control={<Radio />} value="floor" />
-                    </RadioGroup>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="name">How long do you need it for? (in days)</FormLabel>
-                    <TextField
-                      id="duration"
-                      type="number"
-                      name="duration"
-                      placeholder="No. of days"
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ ariaLabel: 'duration' }}
-                      value={booking.duration}
-                      onChange={e => handleChange(e.target.name, e.target.value)}
-                    />
-                  </FormControl>
-                  <Button sx={{ mt: 1 }} variant='contained' color='secondary' onClick={() => { console.log({ booking }); setOpenTourBookingForm(true); }}>Book a Tour</Button>
-                </Box>
-                <BookTourForm open={openTourBookingForm} handleClose={() => setOpenTourBookingForm(false)} />
 
-                <Typography mt={10} mb={2}>Interested in Pricing Details?</Typography>
-                <Button variant='outlined' color='secondary' onClick={() => setContactForm(true)}>Contact Here</Button>
+                {
+                  workspace.category === "corporate" &&
+                  (<><Box
+                    maxWidth='500px'
+                    component="form"
+                    noValidate
+                    sx={{ display: 'flex', flexDirection: 'column', width: '100%', textAlign: 'left', gap: 2 }}
+                  >
+                    <FormControl>
+                      <FormLabel htmlFor="name">How many people is the Office for?</FormLabel>
+                      <TextField
+                        id="name"
+                        type="text"
+                        name="team_size"
+                        placeholder="Team Size"
+                        autoFocus
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{ ariaLabel: 'name' }}
+                        value={booking.team_size}
+                        onChange={e => handleChange(e.target.name, e.target.value)}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel htmlFor="name">What are you looking for?</FormLabel>
+                      <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={booking.type}
+                        onChange={e => handleChange(e.target.name, e.target.value)}
+                      >
+                        <FormControlLabel name='type' label="Coworking Space" control={<Radio />} value="coworking-space" />
+                        <FormControlLabel name='type' label="Private Office" control={<Radio />} value="private-office" />
+                        <FormControlLabel name='type' label="Floor" control={<Radio />} value="floor" />
+                      </RadioGroup>
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel htmlFor="name">How long do you need it for? (in days)</FormLabel>
+                      <TextField
+                        id="duration"
+                        type="number"
+                        name="duration"
+                        placeholder="No. of days"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        sx={{ ariaLabel: 'duration' }}
+                        value={booking.duration}
+                        onChange={e => handleChange(e.target.name, e.target.value)}
+                      />
+                    </FormControl>
+                    <Box display='flex'>
+                      <Button sx={{ mt: 1, flex: 1, mr: 1 }} variant='outlined' color='secondary' onClick={() => { console.log({ booking }); setOpenTourBookingForm(true); }}>Book a Tour</Button>
+                      <Button sx={{ mt: 1, flex: 1, ml: 1 }} variant='contained' color='secondary' onClick={() => { console.log({ booking }); setOpenBookingNowForm(true); }}>Book Now</Button>
+                    </Box>
+
+                  </Box>
+                  </>)
+                }
+
+                {
+                  workspace.category === "coworking-space" && (<div>
+
+                    <><Box
+                      maxWidth='500px'
+                      component="form"
+                      noValidate
+                      sx={{ display: 'flex', flexDirection: 'column', width: '100%', textAlign: 'left', gap: 2 }}
+                    >
+                      <FormControl>
+                        <FormLabel htmlFor="name">How many people is the Office for?</FormLabel>
+                        <TextField
+                          id="name"
+                          type="text"
+                          name="team_size"
+                          placeholder="Team Size"
+                          autoFocus
+                          required
+                          fullWidth
+                          variant="outlined"
+                          sx={{ ariaLabel: 'name' }}
+                          value={booking.team_size}
+                          onChange={e => handleChange(e.target.name, e.target.value)}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel htmlFor="name">What are you looking for?</FormLabel>
+                        <RadioGroup
+                          aria-labelledby="demo-controlled-radio-buttons-group"
+                          name="controlled-radio-buttons-group"
+                          value={booking.type}
+                          onChange={e => handleChange(e.target.name, e.target.value)}
+                        >
+                          <FormControlLabel name='type' label="Coworking Space" control={<Radio />} value="coworking-space" />
+                          <FormControlLabel name='type' label="Private Office" control={<Radio />} value="private-office" />
+                          <FormControlLabel name='type' label="Floor" control={<Radio />} value="floor" />
+                        </RadioGroup>
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel htmlFor="name">How long do you need it for? (in days)</FormLabel>
+                        <TextField
+                          id="duration"
+                          type="number"
+                          name="duration"
+                          placeholder="No. of days"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          sx={{ ariaLabel: 'duration' }}
+                          value={booking.duration}
+                          onChange={e => handleChange(e.target.name, e.target.value)}
+                        />
+                      </FormControl>
+
+                      <Button sx={{ mt: 1, }} variant='contained' color='secondary' onClick={() => { console.log({ booking }); setContactForm(true); }}>Get Quote</Button>
+                    </Box>
+                    </>
+                  </div>)
+                }
+
+                <BookTourForm open={openTourBookingForm} handleClose={() => setOpenTourBookingForm(false)} />
+                <BookNowForm open={openBookingNowForm} handleClose={() => setOpenBookingNowForm(false)} />
               </Paper>
             </Box>
           </Box>

@@ -6,7 +6,8 @@ import {
   Box, Stack, FormControlLabel, Checkbox, FormControl, FormLabel, TextField, Typography, Grid,
   Select, MuiMenuItem,
   Divider,
-  Button
+  Button,
+  CircularProgress
 } from '@/app/_ui/mui';
 import CustomTimePicker, { CustomDatePicker } from './datepicker';
 import {
@@ -1037,7 +1038,7 @@ export const PriceFloors = ({ data, setData }) => {
     </Box>);
 }
 
-export const FinishPublish = ({ onSubmit }) => {
+export const FinishPublish = ({ loading, onSubmit }) => {
   return (<Box maxWidth='1000px' textAlign="center">
     <Typography
       my={3}
@@ -1048,7 +1049,7 @@ export const FinishPublish = ({ onSubmit }) => {
     </Typography>
     <Typography fontSize='16px' my={1}>Thank you for joining the Cowork Connect community!</Typography>
 
-    <Button onClick={onSubmit} sx={{ width: '300px', mt: 3 }} variant='contained' color='secondary'>Finish</Button>
+    <Button startIcon={loading ? <CircularProgress size="16px" sx={{ color: coworkTheme.palette.common.white }} /> : null} onClick={onSubmit} sx={{ width: '300px', mt: 3 }} variant='contained' color='secondary'>Finish</Button>
 
   </Box>);
 }

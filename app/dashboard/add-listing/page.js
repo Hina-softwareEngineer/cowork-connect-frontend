@@ -36,7 +36,8 @@ import { useRouter } from 'next/navigation';
 
 export default function AddListing() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
+  const [currentStep, setCurrentStep] = React.useState(10);
   const [formData, setFormData] = React.useState({ ...initialFormData });
 
   const handleNext = () => {
@@ -104,15 +105,20 @@ export default function AddListing() {
     let formImageData = new FormData();
     formImageData.append('data', JSON.stringify(finalData));
     formImageData.append('image', formData.description.image);
+    setLoading(true);
 
     axios.post(`${baseUrl}space/add-workspaces/`, formImageData, getToken())
       .then(res => {
         if (res.status == 201) {
           setFormData({ ...formData });
+          setLoading(false);
           router.push('/listings');
         }
       })
-      .catch(err => console.log(err, err.response))
+      .catch(err => {
+        console.log(err, err.response);
+        // setLoading(false); 
+      })
   }
 
   const steps = [
@@ -126,7 +132,7 @@ export default function AddListing() {
     { name: 'pricesPrivateOffices', label: 'Private Office Pricing', component: <PricePrivateOffice data={formData} setData={setFormData} /> },
     { name: 'pricesFloors', label: 'Floor Pricing', component: <PriceFloors data={formData} setData={setFormData} /> },
     { name: 'mentorship', label: 'Mentorship', component: <Mentorship data={formData} setData={setFormData} /> },
-    { name: 'finishPublish', label: 'Finish & Publish', component: <FinishPublish onSubmit={handleSubmit} /> }
+    { name: 'finishPublish', label: 'Finish & Publish', component: <FinishPublish loading={loading} onSubmit={handleSubmit} /> }
   ];
 
   return (
