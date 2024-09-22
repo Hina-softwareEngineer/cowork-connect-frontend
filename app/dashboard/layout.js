@@ -10,11 +10,13 @@ import {
 import { Logo } from '@/app/_images';
 import SideMenu from '../_components/sidebar';
 import DashboardHeader from '../_components/dashboardHeader';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DashboardLayout({ children }) {
   return (
     <ThemeProvider theme={coworkTheme}>
+      <ToastContainer />
       <DashboardStyle>
         <Box sx={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
           <AppBar position="static" sx={{ zIndex: 1201 }}>

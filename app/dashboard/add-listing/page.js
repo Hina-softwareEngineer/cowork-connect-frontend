@@ -31,13 +31,14 @@ import axios from 'axios';
 import { baseUrl, getToken } from '@/app/_ui/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 
 export default function AddListing() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
-  const [currentStep, setCurrentStep] = React.useState(10);
+  const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState({ ...initialFormData });
 
   const handleNext = () => {
@@ -117,7 +118,16 @@ export default function AddListing() {
       })
       .catch(err => {
         console.log(err, err.response);
-        // setLoading(false); 
+        setLoading(false);
+        toast(err?.response?.data || "Network Error",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            theme: "light",
+          }
+        );
       })
   }
 
